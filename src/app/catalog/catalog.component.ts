@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { IProduct } from './product.model';
+import { CartService } from '../cart.service';
 
 @Component({
   selector: 'bot-catalog',
@@ -8,10 +9,15 @@ import { IProduct } from './product.model';
 })
 export class CatalogComponent {
 
-  products: IProduct[];
-  filter: string = '';
 
+
+  products: any;
+  filter: string = '';
+  private cartSvc: CartService = inject(CartService);
+
+//agregamos el servicio  CartService
   constructor(){
+
     this.products = [
       {
         id: 1,
@@ -91,7 +97,7 @@ export class CatalogComponent {
         price: 285,
         discount: 0,
       },
-    
+
       {
         id: 4,
         description: "A simple single-eyed head -- simple and inexpensive.",
@@ -188,17 +194,19 @@ export class CatalogComponent {
       },
     ];
   }
+/*
 
-  getImageUrl(product: IProduct) {
-    if(!product) return '';
-    return ' /assets/images/robot-parts/' + product.imageName;
+*/
+addToCart(product: IProduct){
+  this.cartSvc.add(product);
 
-  }
+}
+
 
   getFilteredProducts(){
     return this.filter === ''
     ? this.products
-    : this.products.filter((product) => product.category === this.filter);
+    : this.products.filter((product:any) => product.category === this.filter);
   }
 
   getDiscountedClass(product: IProduct){
